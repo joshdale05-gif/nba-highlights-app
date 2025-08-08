@@ -3,7 +3,12 @@ python-dotenv==1.0.0
 # SQLAlchemy 2.0.42 or later includes fixes for Python 3.13 support.
 # Pin to a version with Python 3.13 compatibility.
 SQLAlchemy==2.0.42
-psycopg2-binary==2.9.9
+# Use psycopg (version 3) instead of psycopg2.  The psycopg2 package is not
+# yet compatible with Python 3.13 and results in an undefined symbol error
+# (_PyInterpreterState_Get).  psycopg provides a modern DBAPI 2.0 driver for
+# PostgreSQL that works with Python 3.13.  The "binary" extra ensures that
+# pre‑built wheels are installed, avoiding the need to compile C extensions.
+psycopg[binary]>=3.1.8
 streamlit==1.29.0
 
 # Use a pandas version compatible with Python 3.13

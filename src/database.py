@@ -42,8 +42,17 @@ class Highlight(Base):
     views: int | None = Column(Integer)
 
 
-# Create engine and session factory
-engine = create_engine(DATABASE_URL, echo=False, future=True)
+# Create engine and session factory.  psycopg2 is not yet compatible with
+# Python 3.13, so we prefer the psycopg (v3) driver if a plain
+# ``postgresql://`` URL is provided.  SQLAlchemy determines the driver
+# based on the URL scheme.  If the URL begins with ``postgresql://``,
+# replace the scheme with ``postgresql+psycopg://`` to explicitly select
+# the psycopg driver.  This ensures compatibility on Python 3.13.
+db_url: str = DATABASE_URL
+if db_url.startswith("postgresql://"):
+    db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
+
+engine = create_engine(db_url, echo=False, future=True)
 SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
 
 
