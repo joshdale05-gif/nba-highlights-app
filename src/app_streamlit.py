@@ -15,7 +15,10 @@ import pandas as pd
 import streamlit as st
 from sqlalchemy.orm import sessionmaker
 
-from .database import Highlight, engine
+# When this script is executed via ``streamlit run src/app_streamlit.py``,
+# it is not part of a package, so relative imports fail.  Import the
+# database module using an absolute name instead of a relative one.
+from database import Highlight, engine
 
 
 def load_data(days_back: int) -> pd.DataFrame:
