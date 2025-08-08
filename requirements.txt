@@ -1,0 +1,6 @@
+google-api-python-client==2.100.0
+python-dotenv==1.0.0
+SQLAlchemy==2.0.30
+psycopg2-binary==2.9.9
+streamlit==1.29.0
+pandas==2.0.3

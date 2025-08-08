@@ -1,0 +1,43 @@
+services:
+  # Web service hosting the Streamlit dashboard
+  - type: web
+    name: nba-highlight-dashboard
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run src/app_streamlit.py --server.port $PORT --server.address 0.0.0.0
+    envVars:
+      # Inject the Postgres connection string as DATABASE_URL
+      - key: DATABASE_URL
+        fromDatabase:
+          name: nba-highlights-db
+          property: connectionString
+      # Prompt for the YouTube API key on initial deploy
+      - key: YOUTUBE_API_KEY
+        sync: false
+      # Configure the number of results to fetch per search term
+      - key: RESULTS_PER_PAGE
+        value: "25"
+
+  # Cron job that runs the scraper every hour
+  - type: cron
+    name: nba-highlight-scraper
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python src/scheduler.py
+    schedule: '0 * * * *'  # run at the top of every hour
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: nba-highlights-db
+          property: connectionString
+      - key: YOUTUBE_API_KEY
+        sync: false
+      - key: RESULTS_PER_PAGE
+        value: "25"
+
+databases:
+  # Provision a free Postgres database for storing highlights
+  - name: nba-highlights-db
+    plan: free
