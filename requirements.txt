@@ -3,4 +3,8 @@ python-dotenv==1.0.0
 SQLAlchemy==2.0.30
 psycopg2-binary==2.9.9
 streamlit==1.29.0
-pandas==2.0.3
+
+# Use a pandas version compatible with Python 3.13
+# As of pandas 2.2.3, the project publishes wheels for Python 3.13, enabling
+# installation without compiling from source【508054457609382†L182-L186】.
+pandas==2.2.3
