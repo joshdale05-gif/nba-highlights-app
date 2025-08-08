@@ -11,7 +11,11 @@ from __future__ import annotations
 from sqlalchemy import create_engine, Column, String, Integer, DateTime
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-from .config import DATABASE_URL
+# Import configuration using an absolute import.  When modules are executed
+# as scripts (e.g. via ``streamlit run src/app_streamlit.py``), relative imports
+# are not allowed because there is no package context.  Import directly
+# from the ``config`` module instead of using a relative import.
+from config import DATABASE_URL
 
 
 # SQLAlchemy base class
